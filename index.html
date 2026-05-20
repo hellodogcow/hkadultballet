@@ -84,7 +84,7 @@
     .day-btn {
         width: 44px;
         height: 44px;
-        border-radius: 50%;
+        border-radius: 12px;
         border: 1px solid var(--border-color);
         background-color: transparent;
         color: var(--text-color);
@@ -338,7 +338,7 @@
         if(d.full === 'All') {
             btn.style.width = 'auto';
             btn.style.padding = '0 16px';
-            btn.style.borderRadius = '22px';
+            btn.style.borderRadius = '12px';
         }
         btn.onclick = () => {
             document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
