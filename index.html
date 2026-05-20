@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hong Kong Adult Ballet</title>
+<style>
+    :root {
+        --bg-color: #f5f5f7;
+        --text-color: #1d1d1f;
+        --border-color: #e5e5ea;
+        --accent: #0071e3;
+        --secondary-text: #86868b;
+        --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        
+        /* Studio Colors */
+        --color-atelier: #34c759;
+        --color-aballet: #ff9500;
+        --color-lumiere: #007aff;
+        --color-hkb: #af52de;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-color: #000000;
+            --text-color: #f5f5f7;
+            --border-color: #38383a;
+            --accent: #2997ff;
+            --secondary-text: #98989d;
+        }
+    }
+
+    body {
+        font-family: var(--font-stack);
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+
+    .header-section {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        font-size: 2.2em;
+        letter-spacing: -0.02em;
+    }
+
+    #current-date {
+        color: var(--secondary-text);
+        font-size: 1.1em;
+        font-weight: 500;
+    }
+
+    /* Day Picker */
+    .day-picker {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
+
+    .day-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--border-color);
+        background-color: transparent;
+        color: var(--text-color);
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .day-btn.active {
+        background-color: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+    }
+
+    /* Filters */
+    .filters-section {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 30px;
+    }
+
+    .filters-section select {
+        flex: 1;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        background-color: transparent;
+        color: var(--text-color);
+        font-size: 1em;
+        font-family: var(--font-stack);
+        appearance: none;
+        outline: none;
+        cursor: pointer;
+    }
+
+    /* Collapsible Sections */
+    .section-title {
+        font-size: 1.3em;
+        font-weight: 600;
+        margin: 10px 0 10px 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        transition: opacity 0.2s ease;
+    }
+    
+    .section-title:hover {
+        opacity: 0.7;
+    }
+
+    .chevron {
+        width: 20px;
+        height: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .collapsed .chevron {
+        transform: rotate(-90deg);
+    }
+    
+    .collapsed-content {
+        display: none !important;
+    }
+
+    /* List View */
+    .list-view {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 30px;
+    }
+
+    .list-item {
+        display: flex;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid var(--border-color);
+        gap: 20px;
+        text-decoration: none;
+        color: inherit;
+        cursor: pointer;
+        transition: background-color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .list-item:hover {
+        opacity: 0.7;
+    }
+
+    .list-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Column 1: Studio Box */
+    .col-studio {
+        flex: 0 0 85px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.85em;
+        text-align: center;
+        padding: 0 8px;
+        box-sizing: border-box;
+    }
+
+    .studio-Atelier { background-color: var(--color-atelier); }
+    .studio-A-Ballet { background-color: var(--color-aballet); }
+    .studio-Lumière { background-color: var(--color-lumiere); }
+    .studio-HKB { background-color: var(--color-hkb); }
+
+    /* Column 2: Info */
+    .col-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+    }
+
+    .line-1 {
+        color: var(--secondary-text);
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    .line-2 {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: var(--text-color);
+        line-height: 1.4;
+    }
+    
+    .instructor-text {
+        font-weight: 400;
+        color: var(--secondary-text);
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 8px;
+        font-size: 0.75em;
+        background-color: rgba(0, 113, 227, 0.1);
+        color: var(--accent);
+        font-weight: 600;
+        margin-left: 8px;
+        vertical-align: middle;
+    }
+
+    .chevron-right {
+        width: 20px;
+        height: 20px;
+        color: var(--secondary-text);
+        margin-left: auto;
+        opacity: 0.5;
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 30px;
+        color: var(--secondary-text);
+        font-size: 1.1em;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-section">
+        <h1>Hong Kong Adult Ballet</h1>
+        <div id="current-date"></div>
+    </div>
+
+    <div class="day-picker" id="day-picker">
+        <!-- Buttons generated by JS -->
+    </div>
+
+    <div class="filters-section">
+        <select id="studio-filter">
+            <option value="All">All Studios</option>
+        </select>
+        <select id="level-filter">
+            <option value="All">All Levels</option>
+        </select>
+    </div>
+
+    <div id="today-section">
+        <div class="section-title" id="today-title-container" onclick="toggleSection('today')">
+            <span id="today-heading">Today's Classes</span>
+            <svg class="chevron" id="today-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="list-view" id="today-class-list"></div>
+    </div>
+
+    <div id="filtered-section">
+        <div class="section-title" id="filtered-title-container" onclick="toggleSection('filtered')">
+            <span id="filtered-heading">All Classes</span>
+            <svg class="chevron" id="filtered-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="list-view" id="class-list"></div>
+    </div>
+</div>
+
+<script>
+    const classData = [{"Day": "Monday", "Studio": "Atelier", "Time": "12:00 - 13:00", "Class / Level": "Beginner 1", "Instructor": "Heejung", "Notes": ""}, {"Day": "Monday", "Studio": "A-Ballet", "Time": "13:45 - 15:10", "Class / Level": "Ballet 1", "Instructor": "Ms Pansy", "Notes": ""}, {"Day": "Monday", "Studio": "Atelier", "Time": "14:00 - 15:00", "Class / Level": "Beginner 2", "Instructor": "Heejung", "Notes": ""}, {"Day": "Monday", "Studio": "A-Ballet", "Time": "18:30 - 19:40", "Class / Level": "Stretching", "Instructor": "Ms Alice/Ms Pansy", "Notes": ""}, {"Day": "Monday", "Studio": "Lumi\u00e8re", "Time": "19:00 - 20:00", "Class / Level": "Beg & Pointe", "Instructor": "Sharon", "Notes": "\ud83d\udc96 Pointe optional"}, {"Day": "Monday", "Studio": "Atelier", "Time": "19:00 - 20:00", "Class / Level": "Beginner 1", "Instructor": "Heejung", "Notes": ""}, {"Day": "Monday", "Studio": "A-Ballet", "Time": "19:45 - 21:10", "Class / Level": "Ballet Intro-1", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Monday", "Studio": "A-Ballet", "Time": "19:45 - 21:10", "Class / Level": "Contemp 1-2", "Instructor": "Ms Alice/Ms Pansy", "Notes": ""}, {"Day": "Monday", "Studio": "Lumi\u00e8re", "Time": "20:00 - 21:15", "Class / Level": "Pre Inter", "Instructor": "Jeremy", "Notes": ""}, {"Day": "Tuesday", "Studio": "HKB", "Time": "11:00 - 13:00", "Class / Level": "Ballet Technique: Elementary & Intro To Pointe", "Instructor": "Dong Ruixue", "Notes": ""}, {"Day": "Tuesday", "Studio": "Atelier", "Time": "12:00 - 13:00", "Class / Level": "Beginner 3", "Instructor": "Heejung", "Notes": ""}, {"Day": "Tuesday", "Studio": "A-Ballet", "Time": "13:45 - 15:10", "Class / Level": "Ballet 1", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Tuesday", "Studio": "Atelier", "Time": "14:00 - 15:00", "Class / Level": "Beginner 1", "Instructor": "Heejung", "Notes": ""}, {"Day": "Tuesday", "Studio": "Atelier", "Time": "19:00 - 20:00", "Class / Level": "Beginner 2", "Instructor": "Heejung", "Notes": ""}, {"Day": "Tuesday", "Studio": "A-Ballet", "Time": "19:00 - 20:25", "Class / Level": "Ballet 1-2", "Instructor": "Ms Pansy/Ms Cindy", "Notes": ""}, {"Day": "Tuesday", "Studio": "A-Ballet", "Time": "19:00 - 20:25", "Class / Level": "Contemp (Duet)", "Instructor": "Ms Alice & Mr Man", "Notes": "NEW!"}, {"Day": "Tuesday", "Studio": "Lumi\u00e8re", "Time": "19:30 - 20:45", "Class / Level": "Advance Beginner", "Instructor": "CL", "Notes": ""}, {"Day": "Tuesday", "Studio": "A-Ballet", "Time": "20:30 - 21:55", "Class / Level": "Musical Jazz 1-2", "Instructor": "Ms Tracy/Ms Asya", "Notes": ""}, {"Day": "Tuesday", "Studio": "A-Ballet", "Time": "20:30 - 21:55", "Class / Level": "Pointe & Variation 2", "Instructor": "Ms Pansy/Ms Cindy", "Notes": ""}, {"Day": "Wednesday", "Studio": "Lumi\u00e8re", "Time": "10:45 - 11:45", "Class / Level": "Beginner", "Instructor": "Sharon", "Notes": "\u2b50 Need to sign up"}, {"Day": "Wednesday", "Studio": "A-Ballet", "Time": "11:00 - 12:25", "Class / Level": "Ballet Intro-1", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Wednesday", "Studio": "Lumi\u00e8re", "Time": "11:45 - 12:30", "Class / Level": "Stretch & Fitness", "Instructor": "Sharon", "Notes": "\u2b50 Need to sign up"}, {"Day": "Wednesday", "Studio": "A-Ballet", "Time": "12:30 - 13:40", "Class / Level": "Relax Stretching", "Instructor": "Ms Alice", "Notes": ""}, {"Day": "Wednesday", "Studio": "Lumi\u00e8re", "Time": "19:00 - 20:00", "Class / Level": "Beginner", "Instructor": "Sharon", "Notes": ""}, {"Day": "Wednesday", "Studio": "Atelier", "Time": "19:00 - 20:20", "Class / Level": "Pre-Intermediate", "Instructor": "Caterine", "Notes": ""}, {"Day": "Wednesday", "Studio": "A-Ballet", "Time": "19:45 - 21:10", "Class / Level": "RAD AF", "Instructor": "Ms Pansy", "Notes": "NEW!"}, {"Day": "Wednesday", "Studio": "A-Ballet", "Time": "19:45 - 21:10", "Class / Level": "Rad Inter*", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Wednesday", "Studio": "Lumi\u00e8re", "Time": "20:00 - 21:15", "Class / Level": "Advance Beginner", "Instructor": "Sharon", "Notes": ""}, {"Day": "Wednesday", "Studio": "Atelier", "Time": "20:30 - 21:30", "Class / Level": "Variation", "Instructor": "Caterine", "Notes": ""}, {"Day": "Wednesday", "Studio": "Lumi\u00e8re", "Time": "21:15 - 22:30", "Class / Level": "Pre Inter", "Instructor": "Sharon", "Notes": ""}, {"Day": "Thursday", "Studio": "Atelier", "Time": "10:15 - 11:15", "Class / Level": "Beginner 1", "Instructor": "Heejung", "Notes": ""}, {"Day": "Thursday", "Studio": "A-Ballet", "Time": "10:30 - 11:55", "Class / Level": "Contemp 1", "Instructor": "Ms Alice", "Notes": ""}, {"Day": "Thursday", "Studio": "A-Ballet", "Time": "10:45 - 12:10", "Class / Level": "Ballet 1", "Instructor": "Ms Pansy", "Notes": ""}, {"Day": "Thursday", "Studio": "Atelier", "Time": "11:30 - 12:50", "Class / Level": "Pre-Intermediate", "Instructor": "Heejung", "Notes": ""}, {"Day": "Thursday", "Studio": "A-Ballet", "Time": "12:15 - 13:25", "Class / Level": "Stretching", "Instructor": "Ms Alice", "Notes": ""}, {"Day": "Thursday", "Studio": "Atelier", "Time": "14:00 - 15:00", "Class / Level": "Beginner 2", "Instructor": "Heejung", "Notes": ""}, {"Day": "Thursday", "Studio": "A-Ballet", "Time": "18:45 - 19:55", "Class / Level": "Stretching & Pbt", "Instructor": "Ms Cindy", "Notes": ""}, {"Day": "Thursday", "Studio": "Atelier", "Time": "19:00 - 20:00", "Class / Level": "Beginner 3", "Instructor": "Heejung", "Notes": ""}, {"Day": "Thursday", "Studio": "Lumi\u00e8re", "Time": "19:15 - 20:45", "Class / Level": "Inter", "Instructor": "Sharon", "Notes": ""}, {"Day": "Thursday", "Studio": "A-Ballet", "Time": "20:00 - 21:25", "Class / Level": "RAD A2", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Thursday", "Studio": "A-Ballet", "Time": "20:00 - 21:25", "Class / Level": "Ballet 1-2", "Instructor": "Ms Cindy", "Notes": "+ 21:30 - 22:00 Pointe 1 [Optional]"}, {"Day": "Thursday", "Studio": "Lumi\u00e8re", "Time": "20:45 - 21:30", "Class / Level": "Pointe", "Instructor": "Sharon", "Notes": ""}, {"Day": "Friday", "Studio": "Atelier", "Time": "10:30 - 12:00", "Class / Level": "Advanced", "Instructor": "Heichi", "Notes": ""}, {"Day": "Friday", "Studio": "Atelier", "Time": "12:15 - 13:15", "Class / Level": "Beginner 3", "Instructor": "Heichi", "Notes": ""}, {"Day": "Friday", "Studio": "Atelier", "Time": "13:30 - 14:30", "Class / Level": "Beginner 1", "Instructor": "Heejung", "Notes": ""}, {"Day": "Friday", "Studio": "A-Ballet", "Time": "13:45 - 15:10", "Class / Level": "Ballet 1-2", "Instructor": "Ms Pansy", "Notes": ""}, {"Day": "Friday", "Studio": "A-Ballet", "Time": "17:30 - 18:55", "Class / Level": "RAD IF*", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Friday", "Studio": "Lumi\u00e8re", "Time": "19:00 - 20:00", "Class / Level": "Beginner", "Instructor": "CL", "Notes": ""}, {"Day": "Friday", "Studio": "Atelier", "Time": "19:00 - 20:00", "Class / Level": "Beginner 2", "Instructor": "Heejung", "Notes": ""}, {"Day": "Friday", "Studio": "A-Ballet", "Time": "19:00 - 20:25", "Class / Level": "Ballet 1-2", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Friday", "Studio": "Lumi\u00e8re", "Time": "20:00 - 21:15", "Class / Level": "Pre Inter", "Instructor": "CL", "Notes": ""}, {"Day": "Friday", "Studio": "A-Ballet", "Time": "20:00 - 21:25", "Class / Level": "RAD A2", "Instructor": "Ms Pansy", "Notes": ""}, {"Day": "Friday", "Studio": "A-Ballet", "Time": "20:30 - 21:55", "Class / Level": "RAD AF", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Saturday", "Studio": "Atelier", "Time": "10:30 - 12:30", "Class / Level": "Advanced", "Instructor": "Heejung", "Notes": ""}, {"Day": "Saturday", "Studio": "Atelier", "Time": "12:40 - 13:40", "Class / Level": "Variation & Pointe 2", "Instructor": "Sofie", "Notes": ""}, {"Day": "Saturday", "Studio": "Lumi\u00e8re", "Time": "13:30 - 14:30", "Class / Level": "Absolute Beginner", "Instructor": "CL", "Notes": "\u2b50 Need to sign up"}, {"Day": "Saturday", "Studio": "Atelier", "Time": "13:50 - 14:50", "Class / Level": "Beginner 3", "Instructor": "Sofie", "Notes": ""}, {"Day": "Saturday", "Studio": "Lumi\u00e8re", "Time": "14:30 - 15:45", "Class / Level": "Advance Beginner", "Instructor": "CL", "Notes": ""}, {"Day": "Saturday", "Studio": "A-Ballet", "Time": "14:30 - 15:55", "Class / Level": "Contemp 1-2", "Instructor": "Ms Pansy/Ms Shirley", "Notes": "NEW!"}, {"Day": "Saturday", "Studio": "Atelier", "Time": "15:00 - 16:20", "Class / Level": "Pre-Intermediate", "Instructor": "Sofie", "Notes": ""}, {"Day": "Saturday", "Studio": "Lumi\u00e8re", "Time": "15:45 - 17:00", "Class / Level": "Pre Inter", "Instructor": "N", "Notes": ""}, {"Day": "Saturday", "Studio": "A-Ballet", "Time": "16:00 - 17:25", "Class / Level": "Ballet 1-2", "Instructor": "Ms Pansy", "Notes": ""}, {"Day": "Saturday", "Studio": "Lumi\u00e8re", "Time": "17:15 - 18:15", "Class / Level": "Pointe", "Instructor": "Sharon", "Notes": ""}, {"Day": "Saturday", "Studio": "A-Ballet", "Time": "17:30 - 18:55", "Class / Level": "Ballet Pointe Intro", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Saturday", "Studio": "A-Ballet", "Time": "17:30 - 18:55", "Class / Level": "Pointe & Variation 1", "Instructor": "Ms Pansy", "Notes": ""}, {"Day": "Saturday", "Studio": "A-Ballet", "Time": "19:00 - 20:25", "Class / Level": "Ballet Introduction", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Saturday", "Studio": "A-Ballet", "Time": "19:00 - 20:25", "Class / Level": "RAD A1*", "Instructor": "Ms Pansy", "Notes": ""}, {"Day": "Saturday", "Studio": "A-Ballet", "Time": "20:30 - 21:55", "Class / Level": "RAD IF*", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Sunday", "Studio": "A-Ballet", "Time": "10:30 - 11:55", "Class / Level": "Ballet Fitness", "Instructor": "Ms Char", "Notes": "NEW!"}, {"Day": "Sunday", "Studio": "Atelier", "Time": "10:30 - 12:00", "Class / Level": "Intermediate", "Instructor": "Heejung", "Notes": ""}, {"Day": "Sunday", "Studio": "Atelier", "Time": "12:10 - 13:10", "Class / Level": "Pointe 1", "Instructor": "Sofie", "Notes": ""}, {"Day": "Sunday", "Studio": "Atelier", "Time": "13:20 - 14:20", "Class / Level": "Beginner 1", "Instructor": "Sofie", "Notes": ""}, {"Day": "Sunday", "Studio": "Lumi\u00e8re", "Time": "13:45 - 14:30", "Class / Level": "Baby Ballet", "Instructor": "(Not Listed)", "Notes": ""}, {"Day": "Sunday", "Studio": "Lumi\u00e8re", "Time": "14:30 - 15:30", "Class / Level": "Beginner", "Instructor": "Sharon", "Notes": ""}, {"Day": "Sunday", "Studio": "Atelier", "Time": "14:30 - 15:30", "Class / Level": "Beginner 2", "Instructor": "Sofie", "Notes": ""}, {"Day": "Sunday", "Studio": "Lumi\u00e8re", "Time": "15:30 - 16:45", "Class / Level": "Advance Beginner", "Instructor": "Sharon", "Notes": ""}, {"Day": "Sunday", "Studio": "A-Ballet", "Time": "16:30 - 17:55", "Class / Level": "Ballet 1-2", "Instructor": "Ms Ayako^ / Ms Pansy", "Notes": "^ Master Class"}, {"Day": "Sunday", "Studio": "A-Ballet", "Time": "16:30 - 17:55", "Class / Level": "RAD A1*", "Instructor": "Ms Karen", "Notes": ""}, {"Day": "Sunday", "Studio": "Lumi\u00e8re", "Time": "16:45 - 18:00", "Class / Level": "Pre Inter", "Instructor": "Sharon", "Notes": ""}, {"Day": "Sunday", "Studio": "A-Ballet", "Time": "18:30 - 19:55", "Class / Level": "Latin Female Solo Intro", "Instructor": "Ms Fonteyn", "Notes": "NEW!"}];
+    
+    const bookingLinks = {
+        'Atelier': 'https://studiobookingonline.com/ateliermuseballet/classes.html',
+        'Lumière': 'https://wa.me/+85262370201',
+        'A-Ballet': 'https://wa.me/+85298334315',
+        'HKB': 'https://hkbworkshops.punchpass.com/classes'
+    };
+
+    // State
+    let currentDay = 'All';
+    let currentStudio = 'All';
+    let currentLevel = 'All';
+
+    // Setup Date
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const today = new Date();
+    document.getElementById('current-date').textContent = today.toLocaleDateString('en-US', dateOptions);
+    
+    const todayName = today.toLocaleDateString('en-US', { weekday: 'long' });
+
+    // Setup Day Buttons
+    const days = [
+        { full: 'All', label: 'All' },
+        { full: 'Monday', label: 'M' },
+        { full: 'Tuesday', label: 'T' },
+        { full: 'Wednesday', label: 'W' },
+        { full: 'Thursday', label: 'T' },
+        { full: 'Friday', label: 'F' },
+        { full: 'Saturday', label: 'S' },
+        { full: 'Sunday', label: 'S' }
+    ];
+    
+    const dayPicker = document.getElementById('day-picker');
+    days.forEach(d => {
+        const btn = document.createElement('button');
+        btn.className = 'day-btn' + (d.full === currentDay ? ' active' : '');
+        btn.textContent = d.label;
+        if(d.full === 'All') {
+            btn.style.width = 'auto';
+            btn.style.padding = '0 16px';
+            btn.style.borderRadius = '22px';
+        }
+        btn.onclick = () => {
+            document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentDay = d.full;
+            renderLists();
+        };
+        dayPicker.appendChild(btn);
+    });
+
+    // Populate Filters
+    const studioSelect = document.getElementById('studio-filter');
+    const levelSelect = document.getElementById('level-filter');
+
+    const studios = [...new Set(classData.map(c => c.Studio))].sort();
+    studios.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s;
+        opt.textContent = s;
+        studioSelect.appendChild(opt);
+    });
+
+    const levels = [...new Set(classData.map(c => c['Class / Level']))].sort();
+    levels.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l;
+        opt.textContent = l;
+        levelSelect.appendChild(opt);
+    });
+
+    // Listeners for filters
+    studioSelect.addEventListener('change', (e) => { currentStudio = e.target.value; renderLists(); });
+    levelSelect.addEventListener('change', (e) => { currentLevel = e.target.value; renderLists(); });
+
+    function toggleSection(sectionName) {
+        const listId = sectionName === 'today' ? 'today-class-list' : 'class-list';
+        const titleContainerId = sectionName === 'today' ? 'today-title-container' : 'filtered-title-container';
+        
+        const list = document.getElementById(listId);
+        const titleContainer = document.getElementById(titleContainerId);
+        
+        if (list.classList.contains('collapsed-content')) {
+            list.classList.remove('collapsed-content');
+            titleContainer.classList.remove('collapsed');
+        } else {
+            list.classList.add('collapsed-content');
+            titleContainer.classList.add('collapsed');
+        }
+    }
+
+    function getStudioClass(studioName) {
+        return 'studio-' + studioName.replace(/\s+/g, '');
+    }
+
+    function generateHTML(classes) {
+        if (classes.length === 0) {
+            return '<div class="no-results">No classes found matching your criteria.</div>';
+        }
+
+        return classes.map(c => {
+            const badgeHTML = c.Notes ? `<span class="badge">${c.Notes}</span>` : '';
+            const signupLink = bookingLinks[c.Studio] || '#';
+            return `
+                <a href="${signupLink}" target="_blank" class="list-item">
+                    <div class="col-studio ${getStudioClass(c.Studio)}">${c.Studio}</div>
+                    <div class="col-info">
+                        <div class="line-1">${c.Day}, ${c.Time}</div>
+                        <div class="line-2">
+                            ${c['Class / Level']} <span class="instructor-text"> by ${c.Instructor}</span>
+                            ${badgeHTML}
+                        </div>
+                    </div>
+                    <svg class="chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </a>
+            `;
+        }).join('');
+    }
+
+    function renderLists() {
+        const todaySection = document.getElementById('today-section');
+        const filteredSection = document.getElementById('filtered-section');
+        const todayContainer = document.getElementById('today-class-list');
+        const listContainer = document.getElementById('class-list');
+        const filteredHeading = document.getElementById('filtered-heading');
+
+        // 1. Today's Classes
+        const todayClasses = classData.filter(c => {
+            return c.Day === todayName &&
+                   (currentStudio === 'All' || c.Studio === currentStudio) &&
+                   (currentLevel === 'All' || c['Class / Level'] === currentLevel);
+        });
+
+        // 2. Filtered Classes
+        const filteredClasses = classData.filter(c => {
+            return (currentDay === 'All' || c.Day === currentDay) &&
+                   (currentStudio === 'All' || c.Studio === currentStudio) &&
+                   (currentLevel === 'All' || c['Class / Level'] === currentLevel);
+        });
+
+        todayContainer.innerHTML = generateHTML(todayClasses);
+        listContainer.innerHTML = generateHTML(filteredClasses);
+
+        // Layout Logic
+        if (currentDay === todayName) {
+            // If user explicitly picked today, hide the redundant filtered list
+            todaySection.style.display = 'block';
+            filteredSection.style.display = 'none';
+        } else if (currentDay === 'All') {
+            // Show both
+            todaySection.style.display = 'block';
+            filteredSection.style.display = 'block';
+            filteredHeading.textContent = 'All Classes';
+        } else {
+            // Show today + selected day
+            todaySection.style.display = 'block';
+            filteredSection.style.display = 'block';
+            filteredHeading.textContent = currentDay + "'s Classes";
+        }
+    }
+
+    // Initial render
+    renderLists();
+</script>
+
+</body>
+</html>
