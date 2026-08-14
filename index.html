@@ -19,7 +19,7 @@
         --color-atelier: #34c759;
         --color-aballet: #ff9500;
         --color-lumiere: #007aff;
-        --color-hkb: #af52de;
+        --color-hkb: #af52de;\n        --color-jbstudio: #ff2d55;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -219,7 +219,7 @@
     .studio-Atelier { background-color: var(--color-atelier); }
     .studio-A-Ballet { background-color: var(--color-aballet); }
     .studio-Lumière { background-color: var(--color-lumiere); }
-    .studio-HKB { background-color: var(--color-hkb); }
+    .studio-HKB { background-color: var(--color-hkb); }\n    .studio-JBStudio { background-color: var(--color-jbstudio); }
 
     /* Column 2: Info */
     .col-info {
@@ -287,7 +287,7 @@
     <div class="header-section">
         <h1>Hong Kong Adult Ballet</h1>
         <div id="current-date"></div>
-        <div style="color: var(--secondary-text); font-size: 0.8em; margin-top: 8px;">Schedule updated for Jul-Sep 2026</div>
+        <div style="color: var(--secondary-text); font-size: 0.8em; margin-top: 8px;">Schedule updated for August 2026</div>
     </div>
 
     <div class="day-picker" id="day-picker">
@@ -385,7 +385,7 @@
         'Atelier': 'https://studiobookingonline.com/ateliermuseballet/classes.html',
         'Lumière': 'https://wa.me/+85262370201',
         'A-Ballet': 'https://wa.me/+85298334315',
-        'HKB': 'https://hkbworkshops.punchpass.com/classes'
+        'HKB': 'https://hkbworkshops.punchpass.com/classes',\n        'JB Studio': '#'
     };
 
     // State
@@ -467,7 +467,7 @@
         }
 
         return classes.map(c => {
-            const badgeHTML = c.Notes ? `<div class="line-3"><span class="badge">${c.Notes}</span></div>` : '';
+            const badgeHTML = c.Notes && c.Notes !== "Free trial in Aug!!" ? `<div class="line-3"><span class="badge">${c.Notes}</span></div>` : '';
             const signupLink = bookingLinks[c.Studio] || '#';
             return `
                 <a href="${signupLink}" target="_blank" class="list-item">
